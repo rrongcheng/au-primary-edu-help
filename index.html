@@ -1,1 +1,100 @@
-index
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+  <div class="d-flex flex-column p-5">
+
+    <div id="summary" class="p-3">
+      Total <span data-total></span> questions. <span data-right ></span> right, <span data-wrong></span> wrong.
+    </div>
+    <div id="question_list" class="d-flex flex-column">
+      <div data-question  class="d-flex flex-row justify-content-around mt-2">
+          <span data-num-1 class="p-2 bg-info flex-fill">Flex item 1</span>
+          +
+          <span data-num-2 class="p-2 bg-warning flex-fill">Flex item 2</span>
+          =
+          <input type="number" data-result class=" flex-fill" onchange="checkResult(this)">
+      </div>
+    </div>
+  </div>
+    <script>
+      $(function(){
+        var qList = $('#question_list');
+        var q1 = qList.find('[data-question]');
+        for(var i=0; i<10; i++){
+          q1.clone().appendTo(qList);
+        }
+        var all_question = qList.find('[data-question]');
+        all_question.each(function(){
+          var newQueestion = getQuestion();
+          $(this).find('[data-num-1]').text(newQueestion.num01);
+          $(this).find('[data-num-2]').text(newQueestion.num02);
+          $(this).find('[data-result]').attr('data-answer', newQueestion.num01 + newQueestion.num02);
+        });
+
+        $('#summary [data-total]').text(all_question.length);
+      });
+      function checkResult(ele){
+        if($(ele).val() == $(ele).attr('data-answer')){
+          $(ele).removeClass('invalid')
+          $(ele).addClass('valid')
+        }else{
+          $(ele).removeClass('valid')
+          $(ele).addClass('invalid')
+        }
+        updStatistics();
+      }
+      function updStatistics(){
+        $('#summary [data-right]').text($('#question_list .valid').length);
+        $('#summary [data-wrong]').text($('#question_list .invalid').length);
+      }
+      function getQuestion(){
+        var num01 = getBaseNum();
+        var num02 = getBaseNum();
+
+        if (get10() > 4){
+          if (get10() > 4){
+            num01 += get10();
+          }else{
+            num02 += get10();
+          }
+        }
+
+        return {
+          "num01" : num01,
+          "num02" : num02,
+        }
+      }
+      function getBaseNum(){
+        var num = get10();
+        while(num<=2){
+          num = get10();
+        }
+        return num;
+      }
+      function get10(){
+        return Math.floor((Math.random() * 10) );
+      }
+    </script>
+    <style>
+      .invalid{
+        background-color: red;
+      } 
+      .valid{
+        background-color: green;
+
+      }
+    </style>
+</body>
+</html>
